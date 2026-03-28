@@ -32,12 +32,21 @@ After a minute, the site will be at:
 
 ## Update stats and text (every phone / laptop sees the same data)
 
-1. Edit **`stats.json`** in your repo (on GitHub: open the file → pencil icon, or edit locally).
-2. Change numbers, about text, club/role, or the `achievements.items` list — keep valid JSON (quotes, commas).
-3. **Commit** and **push** to `main` (or commit on the GitHub website).
+**There is no “Save to website” button on free GitHub Pages** — there is no server to store data. You either (A) use the form editor and upload the file, or (B) edit `stats.json` by hand.
 
-The live site loads `stats.json` with `cache: no-cache`, so after GitHub Pages finishes updating (usually under a minute), **all devices** show the new content on refresh.
+### Option A — Form UI (easiest)
 
-**Local preview:** preferred — use `start-local-server.bat` and open `http://localhost:8080`.
+1. Open **`edit-stats.html`** on your live site (footer link **Update stats**) or locally via `http://localhost:8080/edit-stats.html`.
+2. Change fields → **Download stats.json** or **Copy JSON**.
+3. On GitHub: open **`stats.json`** → edit → paste or replace → commit to **`main`**.
 
-If you **double-click `index.html`**, the browser blocks loading `stats.json` from disk; the site will then try to load data from **GitHub’s raw URL** (needs internet) or use the small embedded copy in `index.html`. After you change `stats.json` on GitHub, double‑click users get updates via that URL; optionally paste the same JSON into the `#stats-fallback-data` script in `index.html` for fully offline demos.
+After ~1 minute, refresh the site; all devices get the new data.
+
+### Option B — Edit JSON directly
+
+1. Edit **`stats.json`** in the repo (GitHub pencil icon or locally). Keep valid JSON.
+2. Commit and push to **`main`**.
+
+The live site loads `stats.json` with `cache: no-cache`. For local `file://` opens, the page also tries **GitHub raw** or embedded fallback — see `script.js`.
+
+**Local preview:** use `start-local-server.bat` and `http://localhost:8080`.

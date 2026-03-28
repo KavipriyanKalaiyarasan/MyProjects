@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update stats — Kavipriyan Kalaiyarasan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="edit-page">
+  <div class="edit-top">
+    <a class="edit-back" href="index.html">← Back to site</a>
+  </div>
+
+  <main class="edit-main container">
+    <h1 class="edit-title">Update profile data</h1>
+    <p class="edit-intro glass-card">
+      <strong>Why isn’t this “Save to cloud”?</strong> Free GitHub Pages only serves files — there is no server to write to. This page is a
+      <strong>form</strong> that builds <code>stats.json</code> for you. Use <strong>Download</strong>, then replace the file in your repo (see
+      steps below). Everyone sees updates after you push.
+    </p>
+
+    <form class="edit-form glass-card" id="statsForm">
+      <h2>About</h2>
+      <label class="edit-label">Bio</label>
+      <textarea class="edit-input edit-textarea" name="aboutLead" rows="4" required></textarea>
+
+      <label class="edit-label">Badges (one per line)</label>
+      <textarea class="edit-input edit-textarea" name="aboutBadges" rows="3" placeholder="8th Standard&#10;Student Athlete"></textarea>
+
+      <h2>Player profile</h2>
+      <label class="edit-label">Position</label>
+      <input class="edit-input" type="text" name="position" />
+      <label class="edit-label">Club</label>
+      <input class="edit-input" type="text" name="club" />
+      <label class="edit-label">Role</label>
+      <input class="edit-input" type="text" name="role" />
+
+      <h2>Stats</h2>
+      <div class="edit-row">
+        <div>
+          <label class="edit-label">Matches</label>
+          <input class="edit-input" type="text" name="matches" />
+        </div>
+        <div>
+          <label class="edit-label">Goals</label>
+          <input class="edit-input" type="text" name="goals" />
+        </div>
+        <div>
+          <label class="edit-label">Assists</label>
+          <input class="edit-input" type="text" name="assists" />
+        </div>
+      </div>
+
+      <h2>Achievements</h2>
+      <label class="edit-label">Section headline</label>
+      <input class="edit-input" type="text" name="achievementsHeadline" />
+
+      <div class="edit-ach-list" id="achList" aria-label="Achievement rows"></div>
+      <button type="button" class="btn btn-ghost edit-add-btn" id="addAch">+ Add achievement</button>
+
+      <div class="edit-actions">
+        <button type="button" class="btn btn-primary" id="btnDownload">Download stats.json</button>
+        <button type="button" class="btn btn-ghost" id="btnCopy">Copy JSON</button>
+        <button type="button" class="btn btn-ghost" id="btnReload">Reload from web</button>
+      </div>
+
+      <p class="edit-status" id="editStatus" role="status"></p>
+
+      <details class="edit-steps">
+        <summary>How to publish your download</summary>
+        <ol>
+          <li>Open your GitHub repo → <strong>stats.json</strong> → Edit (pencil).</li>
+          <li>Paste the JSON from <strong>Copy JSON</strong>, or upload the downloaded file.</li>
+          <li>Commit to <code>main</code>. Wait ~1 minute, then refresh the live site.</li>
+          <li>Optional: paste the same JSON into <code>index.html</code> inside <code>#stats-fallback-data</code> for offline file opens.</li>
+        </ol>
+      </details>
+    </form>
+  </main>
+
+  <script>
+    const STATS_REMOTE_URL =
+      "https://raw.githubusercontent.com/KavipriyanKalaiyarasan/MyProjects/main/stats.json";
+
+    async function tryFetchJson(url) {
+      try {
+        const res = await fetch(url, { cache: "no-cache" });
+        if (!res.ok) return null;
+        return await res.json();
+      } catch {
+        return null;
+      }
+    }
+
+    async function loadStatsPayload() {
+      const localUrl = new URL("stats.json", window.location.href).href;
+      let data = await tryFetchJson(localUrl);
+      if (!data) data = await tryFetchJson(STATS_REMOTE_URL);
+      return data;
+    }
+
+    function applyToForm(data) {
+      if (!data) return;
+      const f = document.getElementById("statsForm");
+      if (data.about?.lead) f.aboutLead.value = data.about.lead;
+      if (Array.isArray(data.about?.badges)) f.aboutBadges.value = data.about.badges.join("\n");
+      if (data.profile) {
+        f.position.value = data.profile.position || "";
+        f.club.value = data.profile.club || "";
+        f.role.value = data.profile.role || "";
+      }
+      if (data.stats) {
+        f.matches.value = data.stats.matches ?? "";
+        f.goals.value = data.stats.goals ?? "";
+        f.assists.value = data.stats.assists ?? "";
+      }
+      if (data.achievements) {
+        f.achievementsHeadline.value = data.achievements.headline || "";
+        const list = document.getElementById("achList");
+        list.replaceChildren();
+        const items = data.achievements.items || [];
+        if (items.length) items.forEach((item) => addAchRow(item.title || "", item.detail || ""));
+        else addAchRow();
+      }
+    }
+
+    function addAchRow(title = "", detail = "") {
+      const list = document.getElementById("achList");
+      const row = document.createElement("div");
+      row.className = "edit-ach-row";
+      const inpTitle = document.createElement("input");
+      inpTitle.className = "edit-input";
+      inpTitle.type = "text";
+      inpTitle.placeholder = "Title";
+      inpTitle.value = title;
+      inpTitle.setAttribute("data-ach-title", "");
+      const inpDetail = document.createElement("input");
+      inpDetail.className = "edit-input";
+      inpDetail.type = "text";
+      inpDetail.placeholder = "Detail / date";
+      inpDetail.value = detail;
+      inpDetail.setAttribute("data-ach-detail", "");
+      const rm = document.createElement("button");
+      rm.type = "button";
+      rm.className = "edit-remove";
+      rm.setAttribute("aria-label", "Remove");
+      rm.textContent = "×";
+      rm.addEventListener("click", () => {
+        row.remove();
+        if (!document.querySelector(".edit-ach-row")) addAchRow();
+      });
+      row.append(inpTitle, inpDetail, rm);
+      list.appendChild(row);
+    }
+
+    function gatherJson() {
+      const f = document.getElementById("statsForm");
+      const badges = f.aboutBadges.value
+        .split(/\r?\n/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const items = [];
+      document.querySelectorAll(".edit-ach-row").forEach((row) => {
+        const title = row.querySelector("[data-ach-title]")?.value.trim() || "";
+        const detail = row.querySelector("[data-ach-detail]")?.value.trim() || "";
+        if (title || detail) items.push({ title, detail });
+      });
+      return {
+        about: {
+          lead: f.aboutLead.value.trim(),
+          badges: badges.length ? badges : ["8th Standard", "Student Athlete"],
+        },
+        profile: {
+          position: f.position.value.trim(),
+          club: f.club.value.trim(),
+          role: f.role.value.trim(),
+        },
+        stats: {
+          matches: f.matches.value.trim() || "—",
+          goals: f.goals.value.trim() || "—",
+          assists: f.assists.value.trim() || "—",
+        },
+        achievements: {
+          headline: f.achievementsHeadline.value.trim() || "Achievements",
+          items,
+        },
+      };
+    }
+
+    function setStatus(msg, ok) {
+      const el = document.getElementById("editStatus");
+      el.textContent = msg;
+      el.style.color = ok ? "var(--neon)" : "var(--text-muted)";
+    }
+
+    document.getElementById("addAch").addEventListener("click", () => addAchRow());
+
+    document.getElementById("btnDownload").addEventListener("click", () => {
+      const json = JSON.stringify(gatherJson(), null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "stats.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      setStatus("Download started. Upload or paste into GitHub as stats.json", true);
+    });
+
+    document.getElementById("btnCopy").addEventListener("click", async () => {
+      const json = JSON.stringify(gatherJson(), null, 2);
+      try {
+        await navigator.clipboard.writeText(json);
+        setStatus("JSON copied — paste into GitHub stats.json editor", true);
+      } catch {
+        setStatus("Copy failed — use Download instead", false);
+      }
+    });
+
+    document.getElementById("btnReload").addEventListener("click", async () => {
+      setStatus("Loading…", true);
+      const data = await loadStatsPayload();
+      if (data) {
+        applyToForm(data);
+        setStatus("Form filled from stats.json", true);
+      } else {
+        setStatus("Could not load — check internet or open via localhost / GitHub Pages", false);
+      }
+    });
+
+    (async function init() {
+      const data = await loadStatsPayload();
+      if (data) applyToForm(data);
+      else {
+        addAchRow();
+      }
+      if (!document.querySelector(".edit-ach-row")) addAchRow();
+    })();
+  </script>
+</body>
+</html>
