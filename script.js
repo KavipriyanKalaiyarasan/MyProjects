@@ -106,4 +106,87 @@
       });
     }
   });
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function setTextContent(id, value) {
+    if (value === undefined || value === null || value === "") return;
+    const el = document.getElementById(id);
+    if (el) el.textContent = String(value);
+  }
+
+  async function loadProfileData() {
+    const headlineEl = document.getElementById("achievementsHeadline");
+    const listEl = document.getElementById("achievementList");
+
+    try {
+      const res = await fetch("stats.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("stats.json not found");
+      const data = await res.json();
+
+      if (data.about?.lead) setTextContent("aboutLead", data.about.lead);
+
+      if (Array.isArray(data.about?.badges) && data.about.badges.length) {
+        const wrap = document.getElementById("aboutBadges");
+        if (wrap) {
+          wrap.innerHTML = data.about.badges
+            .map(
+              (label, i) =>
+                `<span class="badge${i > 0 ? " badge-outline" : ""}">${escapeHtml(String(label))}</span>`
+            )
+            .join("");
+        }
+      }
+
+      if (data.profile) {
+        setTextContent("profilePosition", data.profile.position);
+        setTextContent("profileClub", data.profile.club);
+        setTextContent("profileRole", data.profile.role);
+      }
+
+      if (data.stats) {
+        setTextContent("statMatches", data.stats.matches);
+        setTextContent("statGoals", data.stats.goals);
+        setTextContent("statAssists", data.stats.assists);
+      }
+
+      if (data.achievements) {
+        if (headlineEl) {
+          headlineEl.textContent = data.achievements.headline || "Achievements";
+          headlineEl.classList.remove("loading-pulse");
+        }
+
+        if (listEl && Array.isArray(data.achievements.items)) {
+          listEl.innerHTML = data.achievements.items
+            .map((item) => {
+              const title = escapeHtml(String(item.title ?? ""));
+              const detail = item.detail ? escapeHtml(String(item.detail)) : "";
+              return `<div class="achievement-item">
+              <span class="achievement-item-mark" aria-hidden="true"></span>
+              <div>
+                <h4>${title}</h4>
+                ${detail ? `<p>${detail}</p>` : ""}
+              </div>
+            </div>`;
+            })
+            .join("");
+        }
+      }
+    } catch {
+      if (headlineEl) {
+        headlineEl.textContent = "Achievements";
+        headlineEl.classList.remove("loading-pulse");
+      }
+      if (listEl && !listEl.children.length) {
+        listEl.innerHTML =
+          '<p class="achievement-fallback">Could not load <code>stats.json</code>. For local testing run a small web server (e.g. <code>start-local-server.bat</code>), or open the site from GitHub Pages after you push.</p>';
+      }
+    }
+  }
+
+  loadProfileData();
 })();

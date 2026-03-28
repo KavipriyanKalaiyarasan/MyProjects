@@ -626,6 +626,70 @@ main > section.section:nth-child(even) {
   color: var(--text);
 }
 
+.achievement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.achievement-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: linear-gradient(135deg, rgba(157, 220, 255, 0.08), rgba(4, 14, 24, 0.35));
+  transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
+}
+
+.achievement-item:hover {
+  border-color: rgba(157, 220, 255, 0.35);
+  box-shadow: 0 0 24px var(--neon-soft);
+}
+
+.achievement-item-mark {
+  width: 12px;
+  height: 12px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: var(--green-mid);
+  border: 2px solid var(--neon);
+  box-shadow: 0 0 14px var(--neon-dim);
+}
+
+.achievement-item h4 {
+  margin: 0 0 4px;
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.achievement-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.achievement-fallback {
+  margin: 0;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px dashed var(--glass-border);
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.achievement-fallback code {
+  font-size: 0.85em;
+  color: var(--neon);
+}
+
 .loading-pulse {
   animation: statusPulse 2s ease-in-out infinite;
 }

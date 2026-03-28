@@ -29,3 +29,13 @@ After a minute, the site will be at:
 **`https://YOUR_USERNAME.github.io/YOUR_REPO/`**
 
 (If the repo is named `YOUR_USERNAME.github.io`, the site URL is `https://YOUR_USERNAME.github.io/`.)
+
+## Update stats and text (every phone / laptop sees the same data)
+
+1. Edit **`stats.json`** in your repo (on GitHub: open the file → pencil icon, or edit locally).
+2. Change numbers, about text, club/role, or the `achievements.items` list — keep valid JSON (quotes, commas).
+3. **Commit** and **push** to `main` (or commit on the GitHub website).
+
+The live site loads `stats.json` with `cache: no-cache`, so after GitHub Pages finishes updating (usually under a minute), **all devices** show the new content on refresh.
+
+**Local preview:** use `start-local-server.bat` and open `http://localhost:8080` so `stats.json` can load (opening `index.html` as a file often blocks fetches).

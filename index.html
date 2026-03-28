@@ -51,10 +51,10 @@
       <div class="container">
         <h2 class="section-title reveal">About Me</h2>
         <div class="about-card glass-card reveal">
-          <p class="about-lead">
+          <p class="about-lead" id="aboutLead">
             Passionate and dedicated footballer, currently serving as school team captain. Focused on improving skills and competing at higher levels.
           </p>
-          <div class="about-meta">
+          <div class="about-meta" id="aboutBadges">
             <span class="badge">8th Standard</span>
             <span class="badge badge-outline">Student Athlete</span>
           </div>
@@ -69,30 +69,30 @@
           <div class="info-strip glass-card reveal">
             <div class="info-item">
               <span class="info-label">Position</span>
-              <span class="info-value">Right Winger</span>
+              <span class="info-value" id="profilePosition">Right Winger</span>
             </div>
             <div class="info-item">
               <span class="info-label">Club</span>
-              <span class="info-value">Harrington Football Club</span>
+              <span class="info-value" id="profileClub">Harrington Football Club</span>
             </div>
             <div class="info-item">
               <span class="info-label">Role</span>
-              <span class="info-value">School Team Captain</span>
+              <span class="info-value" id="profileRole">School Team Captain</span>
             </div>
           </div>
           <div class="stat-cards">
             <article class="stat-card glass-card reveal" style="--delay: 0ms">
-              <span class="stat-number" data-target="—">—</span>
+              <span class="stat-number" id="statMatches" data-target="—">—</span>
               <span class="stat-label">Matches Played</span>
               <div class="stat-glow"></div>
             </article>
             <article class="stat-card glass-card reveal" style="--delay: 80ms">
-              <span class="stat-number" data-target="—">—</span>
+              <span class="stat-number" id="statGoals" data-target="—">—</span>
               <span class="stat-label">Goals</span>
               <div class="stat-glow"></div>
             </article>
             <article class="stat-card glass-card reveal" style="--delay: 160ms">
-              <span class="stat-number" data-target="—">—</span>
+              <span class="stat-number" id="statAssists" data-target="—">—</span>
               <span class="stat-label">Assists</span>
               <div class="stat-glow"></div>
             </article>
@@ -109,14 +109,9 @@
             <div class="trophy-icon" aria-hidden="true">
               <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 14h40v6H12V14zm4 6v8c0 8.837 7.163 16 16 16s16-7.163 16-16v-8H16z" fill="currentColor" opacity=".25"/><path d="M8 10h48v4H8v-4zm4 14h8v4c0 6.627 5.373 12 12 12s12-5.373 12-12v-4h8v2c0 9.941-8.059 18-18 18H22c-9.941 0-18-8.059-18-18v-2z" fill="currentColor"/><path d="M24 46h16v8H24v-8zm8 8v6h-4v4h8v-4h-4v-6z" fill="currentColor" opacity=".6"/></svg>
             </div>
-            <p class="achievements-status loading-pulse">Achievements: Loading...</p>
+            <p class="achievements-status loading-pulse" id="achievementsHeadline">Loading profile data…</p>
           </div>
-          <div class="timeline timeline-placeholder">
-            <div class="timeline-line"></div>
-            <div class="timeline-node"><span></span></div>
-            <div class="timeline-node"><span></span></div>
-            <div class="timeline-node"><span></span></div>
-          </div>
+          <div class="achievement-list" id="achievementList" aria-live="polite"></div>
         </div>
       </div>
     </section>
