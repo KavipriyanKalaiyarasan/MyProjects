@@ -38,4 +38,6 @@ After a minute, the site will be at:
 
 The live site loads `stats.json` with `cache: no-cache`, so after GitHub Pages finishes updating (usually under a minute), **all devices** show the new content on refresh.
 
-**Local preview:** use `start-local-server.bat` and open `http://localhost:8080` so `stats.json` can load (opening `index.html` as a file often blocks fetches).
+**Local preview:** preferred — use `start-local-server.bat` and open `http://localhost:8080`.
+
+If you **double-click `index.html`**, the browser blocks loading `stats.json` from disk; the site will then try to load data from **GitHub’s raw URL** (needs internet) or use the small embedded copy in `index.html`. After you change `stats.json` on GitHub, double‑click users get updates via that URL; optionally paste the same JSON into the `#stats-fallback-data` script in `index.html` for fully offline demos.
