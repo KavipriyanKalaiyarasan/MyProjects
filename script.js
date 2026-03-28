@@ -4,7 +4,6 @@
   const navLinks = document.querySelectorAll(".nav-links a");
   const header = document.querySelector(".site-header");
   const heroBg = document.querySelector(".hero-bg");
-
   const headerOffset = () => (header ? header.getBoundingClientRect().height : 72);
 
   function scrollToHash(hash) {
